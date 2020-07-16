@@ -10,10 +10,10 @@
 06 00 00 00 00 00 00 00 
 
 # 0x400078 address in virtual memory of this section
-78 00 40 00 00 00 00 00
+B0 00 40 00 00 00 00 00
 
 # 0x78 = offset in the file of this section (start of program code)
-78 00 00 00 00 00 00 00
+B0 00 00 00 00 00 00 00
 
 # 0x38 = size of this section in the file: 56 bytes
 38 00 00 00 00 00 00 00 

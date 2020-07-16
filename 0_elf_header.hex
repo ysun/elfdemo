@@ -33,14 +33,14 @@
 # 0x400078 = start address: right after this header and the program
 #  header, which take 0x78 bytes, if the binary is mapped into 
 #  memory at address 0x400000)
-78 00 40 00 00 00 00 00
+B0 00 40 00 00 00 00 00
 
 # 0x40 = offset to program header, right after this header which is 0x40 bytes long 
 40 00 00 00 00 00 00 00
 
 # 0xC0 = offset to section header, which is after the program text and the 
 #  string table
-c0 00 00 00 00 00 00 00 
+22 01 00 00 00 00 00 00 
 
 # 0x00000000 = architecture specific flags
 00 00 00 00
@@ -52,15 +52,15 @@ c0 00 00 00 00 00 00 00
 38 00
 
 # 1 = number of program header
-01 00
+02 00
 
 # 0x40 = size of a section header, always 64 bytes
 40 00
 
 # 3 = number of sections headers 
-03 00
+04 00
 
 # 2 = index of the section header that references the stringtable
-02 00 
+03 00 
 
 
