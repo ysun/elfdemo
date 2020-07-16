@@ -6,6 +6,7 @@ cat 0_elf_header.hex \
   4_section_header_0.hex \
   5_section_header_1.hex \
   6_section_header_2.hex \
+  7_section_header_3.hex \
   | grep -v "#" > $$.hex
 xxd -p -r $$.hex $BINARY
 chmod 755 $BINARY
