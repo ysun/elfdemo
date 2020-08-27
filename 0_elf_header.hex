@@ -40,7 +40,7 @@
 
 # 0xC0 = offset to section header, which is after the program text and the 
 #  string table
-c0 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 
 
 # 0x00000000 = architecture specific flags
 00 00 00 00
@@ -58,9 +58,9 @@ c0 00 00 00 00 00 00 00
 40 00
 
 # 3 = number of sections headers 
-03 00
+00 00
 
 # 2 = index of the section header that references the stringtable
-02 00 
+00 00 
 
 
