@@ -19,7 +19,9 @@
 00
 
 # 7 bytes undefined
-00 00 00 00 00 00 00 
+48 65 6c 6c 6f 2c 20
+#48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 0a 00
+#00 00 00 00 00 00 00 
 
 # 02 = executable binary
 02 00 
@@ -33,14 +35,16 @@
 # 0x400078 = start address: right after this header and the program
 #  header, which take 0x78 bytes, if the binary is mapped into 
 #  memory at address 0x400000)
-78 00 40 00 00 00 00 00
+70 00 00 00 00 00 00 00
 
 # 0x40 = offset to program header, right after this header which is 0x40 bytes long 
 40 00 00 00 00 00 00 00
 
 # 0xC0 = offset to section header, which is after the program text and the 
 #  string table
-00 00 00 00 00 00 00 00 
+20 77 6f 72 6c 64 0a 00
+#48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 0a 00
+#00 00 00 00 00 00 00 00 
 
 # 0x00000000 = architecture specific flags
 00 00 00 00
