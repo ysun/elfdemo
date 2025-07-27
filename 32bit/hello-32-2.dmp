@@ -1,0 +1,114 @@
+# >>> ELF header -- 52 bytes for 32-bit
+
+
+7f 45 4c 46  # Magic number
+01            # 01 = 32 bit
+   01         # 01 = little-endian
+      01      # 01 = ELF version
+         00   # 00 = Target ABI
+00            # 00 = Target ABI version
+   00 00 00   # Padding
+00 00 00 00   # 7 bytes undefined
+
+02 00         # 02 = executable binary
+      03 00   # 03 = i386 architecture
+01 00 00 00   # 1 = ELF version
+
+78 80 04 08   # 0x08048078 = start address
+              # (32-bit default load address 0x08048000 + 0x78)
+
+34 00 00 00   # 0x34 = offset to program header (after 52-byte header)
+
+9c 00 00 00   # 0xC0 = offset to section header (same as original)
+
+00 00 00 00   # Flags
+
+34 00         # 0x34 = size of this header (52 bytes)
+      20 00   # 0x20 = size of a program header (32 bytes)
+01 00         # 1 = number of program headers
+      28 00   # 0x28 = size of a section header (40 bytes)
+
+03 00         # 3 = number of section headers
+      02 00   # 2 = index of stringtable section
+
+# >>> Program header -- 32 bytes for 32-bit (sum:84 B)
+01 00 00 00   # 1 = loadable segment
+
+78 00 00 00   # 0x78 = file offset of segment (after headers)
+78 80 04 08   # 0x08048078 = virtual address (code start)
+78 80 04 08   # 0x08048078 = physical address
+ca 00 00 00   # 0x48 = file size (72 bytes: code+string+strtab)
+ca 00 00 00   # 0x48 = memory size
+05 00 00 00   # 0x05 = executable | readable
+00 10 00 00   # 0x1000 = alignment (4KB)
+
+# >>> Program code -- 42 bytes (32-bit instructions, sum: 116 B)
+# 32-bit syscalls using int 0x80
+# BB 01 00 00 00   # mov $1, %ebx       (stdout)
+# B9 74 80 04 08   # mov $0x080480a2, %ecx (string addr)
+# BA 0D 00 00 00   # mov $13, %edx      (string length)
+# B8 04 00 00 00   # mov $4, %eax       (sys_write)
+# CD 80            # int $0x80
+# B8 01 00 00 00   # mov $1, %eax       (sys_exit)
+# 31 DB            # xor %ebx, %ebx     (exit code 0)
+# CD 80            # int $0x80
+# 90 90 90 90 90 90 90 90 90 90 90  # 11-byte NOP padding
+
+                # 54    INTENTION               INSTRUCTION         OPCODE
+# >>> Program code -- 52 bytes (32-bit instructions, sum: 126 B)
+BB 01 00 00 00  #       ebx <- 1 (stdout)
+B9 A3 80 04 08  #       ecx <- buf
+BA 0A 00 00 00  #       edx <- count
+BF 01 00 00 00  # 68    edi <- 5 (loop count)
+# Begin
+B8 04 00 00 00  #       eax <- 4 (write)        mov r32, imm32      B8+rd id
+CD 80           #       syscall                 int imm8            CD ib
+4F              #       edi <- edi - 1          dec r32             48+rd
+75 F6           # 72    jump Begin if nonzero   jnz rel8            75 cb
+
+B8 01 00 00 00  #       eax <- 1 (exit)
+BB 00 00 00 00  #       ebx <- 0 (param)
+CD 80           # 7E    syscall
+
+48 45 4C 4F 20  #       "HELO "
+57 52 4C 44 0A  # 88    "WRLD\n"
+
+# Text "Hello, world\n\0" -- 14 bytes (sum: 140 B)
+48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 0a 00
+
+# String table ".shstrtab\0.text\0" -- 16 bytes (sum: 156)
+2e 73 68 73 74 72 74 61 62 00 2e 74 65 78 74 00
+
+# >>> Section headers -- 40 bytes each
+
+# Section 0 (unused)
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+
+
+# Section 1 (.text)
+0a 00 00 00   # name offset (0x0A -> ".text")
+01 00 00 00   # type = PROGBITS
+06 00 00 00   # flags = ALLOC | EXECINSTR
+78 80 04 08   # virtual address (0x08048078)
+78 00 00 00   # file offset (0x78)
+2a 00 00 00   # size (42 bytes)
+00 00 00 00   # link index
+00 00 00 00   # info
+01 00 00 00   # alignment (1)
+00 00 00 00   # entry size
+
+# Section 2 (.shstrtab)
+00 00 00 00   # name offset (0x00 -> ".shstrtab")
+03 00 00 00   # type = STRTAB
+00 00 00 00   # flags
+00 00 00 00   # virtual address
+b0 00 00 00   # file offset (0xB0)
+10 00 00 00   # size (16 bytes)
+00 00 00 00   # link index
+00 00 00 00   # info
+01 00 00 00   # alignment (1)
+00 00 00 00   # entry size
