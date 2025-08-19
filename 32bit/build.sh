@@ -6,3 +6,6 @@ for f in *.dmp ; do
 done
 
 gcc -m32 hello-32.S -o hello-32-asm -static -nostdlib
+
+as -o hello64.o hello64.S
+ld -static -nostdlib -o hello64-asm hello64.o
